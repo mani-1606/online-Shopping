@@ -9,6 +9,7 @@ import com.javaboy.mani.request.AddProductRequest;
 import com.javaboy.mani.request.ProductUpdateRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +20,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
-    @Autowired
     private final ProductRepository repo;
-    @Autowired
-    CategoryRepository catrepo;
-    @Autowired
-    cartItemRepository cartIRepo;
-    @Autowired
-    orderItemRepository orderIRepo;
-    @Autowired
-    private ProductRepository productRepository;
+    private final  CategoryRepository catrepo;
+    private final  cartItemRepository cartIRepo;
+    private final  orderItemRepository orderIRepo;
+    private final ProductRepository productRepository;
+    private ModelMapper modelMapper;
 
     @Override
     public Product addProduct(AddProductRequest product) {

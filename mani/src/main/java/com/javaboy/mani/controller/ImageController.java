@@ -41,4 +41,22 @@ public class ImageController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
                         image.getFilename() + "\"").body(resource);
     }
+    @DeleteMapping("/image/{id}/delete")
+    public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long id){
+        try {
+            Image deletedImage = imageService.deleteImageById(id);
+            return ResponseEntity.ok(new ApiResponse("Image deleted successfully", deletedImage));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ApiResponse("Failed to delete image: ", e.getMessage()));
+        }
+    }
+    @PutMapping("/image/{id}/update")
+    public ResponseEntity<ApiResponse> updateImage(@RequestBody MultipartFile file, @PathVariable("id") Long id){
+        try {
+            imageService.updateImage(file, id);
+            return ResponseEntity.ok(new ApiResponse("Image updated successfully", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ApiResponse("Failed to update image: ", e.getMessage()));
+        }
+    }
 }
