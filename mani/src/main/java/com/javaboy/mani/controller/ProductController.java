@@ -47,7 +47,7 @@ public class ProductController {
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
-        try {
+
             // Log the received product for debugging
             System.out.println("Received product: " + product.getName() + ", " + product.getBrand() + ", " + product.getPrice());
 
@@ -55,12 +55,7 @@ public class ProductController {
             Productdto convertedProduct = productService.conertToDto(savedProduct);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Product added successfully",
                     convertedProduct));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("we can't add  product beacoz " +
-                    "it's alrady there: ",
-                    e.getMessage()));
-        }
+
     }
 
     @PutMapping("/product/{id}/update")

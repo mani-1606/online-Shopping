@@ -29,11 +29,11 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(AddProductRequest product) {
-        try {
-            if (ProductExists(product.getName(), product.getBrand())) {
-                throw new IllegalArgumentException("Product with name " + product
-                        .getName() + " and brand " + product.getBrand() + " already exists.");
-            }
+        // Remove try-catch to allow exceptions to propagate to global handler
+        if (ProductExists(product.getName(), product.getBrand())) {
+            throw new IllegalArgumentException("Product with name " + product
+                    .getName() + " and brand " + product.getBrand() + " already exists.");
+        }
 
             // Handle category creation or lookup
             String categoryName = "";
@@ -78,10 +78,6 @@ public class ProductService implements IProductService {
             newProduct.setCategory(category);
 
             return repo.save(newProduct);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
     }
 
     private Boolean ProductExists(String name, String brand) {
