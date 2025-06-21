@@ -21,14 +21,34 @@ import java.util.List;
 @RequestMapping("${api.prefix}/images")
 public class ImageController {
     private final IImageService imageService;
+    /**
+     * Upload images for a product
+     * @param file Single file upload (optional)
+     * @param files Multiple files upload (optional)
+     * @param productId Product ID to associate with images
+     * @return ApiResponse with uploaded image details
+     */
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse> uploadImages(
-                                                   @RequestParam("file") List<MultipartFile> files,
+                                                   @RequestParam(value = "file", required = false) MultipartFile file,
+                                                   @RequestParam(value = "files", required = false) List<MultipartFile> files,
                                                    @RequestParam("productId") Long productId){
         try {
-            List<Imagedto> imagedto = imageService.saveImages(files, productId);
-            return ResponseEntity.ok(new ApiResponse("Images uploaded successfully", imagedto));
+            // Handle both single file and multiple files cases
+            if (file != null && (files == null || files.isEmpty())) {
+                // Single file upload case
+                List<MultipartFile> fileList = List.of(file);
+                List<Imagedto> imagedto = imageService.saveImages(fileList, productId);
+                return ResponseEntity.ok(new ApiResponse("Image uploaded successfully", imagedto));
+            } else if (files != null && !files.isEmpty()) {
+                // Multiple files upload case
+                List<Imagedto> imagedto = imageService.saveImages(files, productId);
+                return ResponseEntity.ok(new ApiResponse("Images uploaded successfully", imagedto));
+            } else {
+                return ResponseEntity.badRequest().body(new ApiResponse("No files were provided", null));
+            }
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(new ApiResponse("Failed to upload images: ", e.getMessage()));
         }
     }
@@ -51,7 +71,7 @@ public class ImageController {
         }
     }
     @PutMapping("/image/{id}/update")
-    public ResponseEntity<ApiResponse> updateImage(@RequestBody MultipartFile file, @PathVariable("id") Long id){
+    public ResponseEntity<ApiResponse> updateImage(@RequestPart("file") MultipartFile file, @PathVariable("id") Long id){
         try {
             imageService.updateImage(file, id);
             return ResponseEntity.ok(new ApiResponse("Image updated successfully", null));

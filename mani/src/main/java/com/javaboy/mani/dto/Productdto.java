@@ -20,7 +20,9 @@ public class Productdto {
     private BigDecimal price;
     private int inventory;
     private String description;
-    private Category category;
+
+    // Only include essential category information to avoid circular references
+    private CategoryDto category;
     private List<Imagedto> images;
 
 }

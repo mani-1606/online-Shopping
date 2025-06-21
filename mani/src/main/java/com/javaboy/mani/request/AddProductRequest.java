@@ -13,9 +13,10 @@ public class AddProductRequest {
     private int inventory;
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
     private Category category;
+
+    // Additional field to handle category as a string
+    private String categoryName;
 
     public long getId() {
         return id;
@@ -71,5 +72,13 @@ public class AddProductRequest {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

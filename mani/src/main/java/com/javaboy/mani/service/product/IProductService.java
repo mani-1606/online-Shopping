@@ -1,5 +1,6 @@
 package com.javaboy.mani.service.product;
 
+import com.javaboy.mani.dto.Productdto;
 import com.javaboy.mani.model.Product;
 import com.javaboy.mani.request.AddProductRequest;
 import com.javaboy.mani.request.ProductUpdateRequest;
@@ -19,8 +20,14 @@ public interface IProductService {
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByBrandAndName(String brand, String name);
     List<Product> getProductsByName(String name);
+        List<Product> getProductsByNamePrefix(String prefix);
+
     List<Product> getProductsByCategoryAndName(String category, String name);
     List<Product> getProductsByCategoryAndBrandAndName(String category, String brand, String name);
     List<Product> getProductsByCategoryAndBrandAndPrice(String category, String brand, Double price);
     List<Product> getProductsByBrand(String brand);
+
+    List<Productdto> getConvertedProducts(List<Product> products);
+
+    Productdto conertToDto(Product product);
 }

@@ -1,5 +1,6 @@
 package com.javaboy.mani.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Product> prduct;
 
@@ -23,6 +24,7 @@ public class Category {
     }
 
     public Category(String name) {
+        this.name = name;
     }
 
     public long getId() {

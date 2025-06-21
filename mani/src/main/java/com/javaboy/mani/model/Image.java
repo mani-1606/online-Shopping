@@ -1,5 +1,6 @@
 package com.javaboy.mani.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.sql.Blob;
@@ -13,7 +14,10 @@ public class Image {
     private String filename;
     private String filetype;
     @Lob
+
+    @JsonIgnore
     private Blob image;
+
 
     private String downloadUrl;
     @ManyToOne
