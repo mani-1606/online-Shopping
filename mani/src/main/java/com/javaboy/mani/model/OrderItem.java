@@ -1,10 +1,12 @@
 package com.javaboy.mani.model;
 
 import jakarta.persistence.*;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 @Entity
 @Table(name = "OrderItem")
+@RequiredArgsConstructor
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +30,14 @@ public class OrderItem {
 
     public OrderItem() {
     }
+
+    public OrderItem(Order order, Product product, BigDecimal unitPrice, int quantity) {
+        this.order = order;
+        this.product = product;
+        this.price = unitPrice;
+        this.quantity = quantity;
+    }
+
 
     public Long getId() {
         return id;

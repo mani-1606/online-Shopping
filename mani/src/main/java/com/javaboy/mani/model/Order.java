@@ -2,6 +2,9 @@ package com.javaboy.mani.model;
 
 import com.javaboy.mani.enums.OrderStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,6 +13,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,5 +91,30 @@ public class Order {
                 ", orderStatus=" + orderStatus +
                 ", user=" + user +
                 '}';
+    }
+
+    public BigDecimal getPrice() {
+        return orderItems.stream()
+                .map(item -> item.getPrice().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public char[] getQuantity() {
+        return orderItems.stream()
+                .map(item -> item.getQuantity())
+                .reduce(0, Integer::sum)
+                .toString()
+                .toCharArray();
+    }
+
+    public void setOrderItems(HashSet<Object> objects) {
+        this.orderItems = new HashSet<>();
+        for (Object obj : objects) {
+            if (obj instanceof OrderItem orderItem) {
+                this.orderItems.add(orderItem);
+            } else {
+                throw new IllegalArgumentException("Invalid object type in setOrderItems");
+            }
+        }
     }
 }
