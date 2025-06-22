@@ -29,33 +29,27 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(AddProductRequest product) {
-        // Remove try-catch to allow exceptions to propagate to global handler
         if (ProductExists(product.getName(), product.getBrand())) {
             throw new IllegalArgumentException("Product with name " + product
                     .getName() + " and brand " + product.getBrand() + " already exists.");
         }
 
-            // Handle category creation or lookup
             String categoryName = "";
             Category category = null;
-
-            // If category is passed as a nested object
             if (product.getCategory() != null && product.getCategory().getName() != null) {
                 categoryName = product.getCategory().getName();
             } else {
-                // If category is passed as a string in some other field
-                // This is a fallback if your frontend is sending category as a string
+
                 categoryName = "Tabs"; // Default category for testing
             }
 
-            // Find or create the category
             category = catrepo.findByName(categoryName);
             if (category == null) {
                 category = new Category(categoryName);
                 category = catrepo.save(category);
             }
 
-            // Create the product with properly initialized values
+
             Product newProduct = new Product();
             newProduct.setName(product.getName());
             newProduct.setBrand(product.getBrand());

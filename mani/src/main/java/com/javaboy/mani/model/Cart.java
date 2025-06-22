@@ -4,6 +4,7 @@ package com.javaboy.mani.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,5 +73,29 @@ public class Cart {
     }
 
     private void updateTotalAmount() {
+        this.totalAmount = cartItems.stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+    public Set<CartItem> getItems() {
+        return cartItems;
+    }
+
+    public void addItem(CartItem cartItem) {
+        if (cartItem != null) {
+            cartItem.setCart(this);
+            this.cartItems.add(cartItem);
+            updateTotalAmount();
+        }
+    }
+
+    public void clearCart() {
+        for (CartItem item : cartItems) {
+            item.setCart(null);
+        }
+        this.cartItems.clear();
+        this.totalAmount = BigDecimal.ZERO;
     }
 }
