@@ -113,4 +113,10 @@ public class User {
                 ", roles=" + roles +
                 '}';
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+
 }
