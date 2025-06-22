@@ -21,11 +21,11 @@ public class CartItemController {
     private  final ICartService cartService;
     @PostMapping("/item/add")
     public ResponseEntity<ApiResponse> addItemToCart(
-                                                            Long userId, 
+                                                          //  Long userId,
                                               @RequestParam Long productId, 
                                               @RequestParam Integer quantity) {
         try {
-            UserDto userDto = userService.getUserById(userId);
+            UserDto userDto = userService.getUserById(1L);
             User user = com.javaboy.mani.mapper.UserMapper.toEntity(userDto);
             Cart cart = cartService.initializeNewCartForUser(user);
             cartItemService.addItemToCart(cart.getId(), productId, quantity);

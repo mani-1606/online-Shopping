@@ -3,6 +3,7 @@ package com.javaboy.mani.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+
 @Entity
 @Table(name = "CartItem")
 public class CartItem {
@@ -11,26 +12,24 @@ public class CartItem {
     private Long id;
     private int quantity;
     private BigDecimal unitPrice;
-    private BigDecimal totalPrice;
-    @ManyToOne(cascade = jakarta.persistence.CascadeType.ALL)
-    @JoinColumn(name = "product_id")
-    private Product product;
-    @ManyToOne(cascade = jakarta.persistence.CascadeType.ALL)
+
+    @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    public void SetTotalPrice(){
-        this.totalPrice = this.unitPrice.multiply(new BigDecimal(this.quantity));
+    public CartItem() {
     }
 
-    public CartItem(Long id, int quantity, BigDecimal unitPrice, BigDecimal totalPrice, Product product, Cart cart) {
+    public CartItem(Long id, int quantity, BigDecimal unitPrice, Cart cart, Product product) {
         this.id = id;
         this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-        this.product = product;
+        this.unitPrice = unitPrice != null ? unitPrice : BigDecimal.ZERO;
         this.cart = cart;
+        this.product = product;
     }
 
     public Long getId() {
@@ -50,11 +49,19 @@ public class CartItem {
     }
 
     public BigDecimal getUnitPrice() {
-        return unitPrice;
+        return unitPrice != null ? unitPrice : BigDecimal.ZERO;
     }
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public Product getProduct() {
@@ -66,22 +73,7 @@ public class CartItem {
     }
 
     public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
-    public CartItem() {
+        return unitPrice != null ? unitPrice.multiply(new BigDecimal(quantity)) : BigDecimal.ZERO;
     }
 
     @Override
@@ -90,9 +82,18 @@ public class CartItem {
                 "id=" + id +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
-                ", totalPrice=" + totalPrice +
-                ", product=" + product +
                 ", cart=" + cart +
+                ", product=" + product +
                 '}';
+    }
+
+    private BigDecimal totalPrice;
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void calculateAndSetTotalPrice() {
+        this.totalPrice = getTotalPrice();
     }
 }

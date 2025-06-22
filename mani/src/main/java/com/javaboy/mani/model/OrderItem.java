@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 @Entity
 @Table(name = "OrderItem")
-@RequiredArgsConstructor
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +33,7 @@ public class OrderItem {
     public OrderItem(Order order, Product product, BigDecimal unitPrice, int quantity) {
         this.order = order;
         this.product = product;
-        this.price = unitPrice;
+        this.price = unitPrice != null ? unitPrice : BigDecimal.ZERO;
         this.quantity = quantity;
     }
 

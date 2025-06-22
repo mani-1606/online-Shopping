@@ -8,13 +8,14 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "orders")
 @AllArgsConstructor
-@RequiredArgsConstructor
+
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,13 +108,21 @@ public class Order {
                 .toCharArray();
     }
 
-    public void setOrderItems(HashSet<Object> objects) {
-        this.orderItems = new HashSet<>();
+    public void setOrderItems(Set<OrderItem> items) {
+        this.orderItems = new HashSet<>(items);
+    }
+
+    public void addOrderItems(Collection<?> objects) {
+        if (this.orderItems == null) {
+            this.orderItems = new HashSet<>();
+        }
+
         for (Object obj : objects) {
             if (obj instanceof OrderItem orderItem) {
                 this.orderItems.add(orderItem);
             } else {
-                throw new IllegalArgumentException("Invalid object type in setOrderItems");
+                throw new IllegalArgumentException("Invalid object type in addOrderItems: " + 
+                        (obj != null ? obj.getClass().getName() : "null"));
             }
         }
     }
